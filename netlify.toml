@@ -1,0 +1,15 @@
+[build]
+  command = "pnpm install --frozen-lockfile --prod=false && pnpm run build"
+  publish = "dist/client"
+[build.environment]
+  NODE_VERSION = "24"
+[dev]
+  framework = "#custom"
+  command = "npm run dev"
+  targetPort = 3000
+  port = 8889
+
+# Escudos de los rivales (servidos y achicados por Netlify Image CDN)
+[images]
+  remote_images = ['https://lud-escudos\.s3\.us-east-1\.amazonaws\.com/.*']
+
