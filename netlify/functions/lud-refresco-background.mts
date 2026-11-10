@@ -3,7 +3,6 @@
  * guarda una copia nueva. La fuente (servidor gratuito) puede tardar en
  * "despertar", por eso se usa un tiempo de espera largo.
  */
-import type { Config } from '@netlify/functions'
 import { edadHoras, leerGuardados, refrescar } from '../lib/almacen.ts'
 
 export default async () => {
@@ -19,6 +18,3 @@ export default async () => {
   }
 }
 
-export const config: Config = {
-  background: true,
-}
