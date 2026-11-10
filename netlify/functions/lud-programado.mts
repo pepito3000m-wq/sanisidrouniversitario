@@ -1,26 +1,26 @@
-/**
- * Actualización automática: martes y miércoles a las 12:00 de Uruguay (UTC−3),
- * que son los días en que la Liga suele cargar planillas y resultados.
- * El cron de Netlify funciona en UTC: 12:00 UY = 15:00 UTC.
- *
- * Una función programada tiene 30 s como máximo, por eso solo dispara
- * `lud-refresco` (función en segundo plano, hasta 15 min), que hace la descarga.
- */
 import type { Config } from '@netlify/functions'
 
+const SITIO = 'https://sanisidrouniversitario.netlify.app'
+const RUTAS = [
+  '/.netlify/functions/lud-refresco-background',
+  '/.netlify/functions/lud-refresco',
+]
+
 export default async () => {
-  const base = Netlify.env.get('URL')
-  if (!base) return
-  const res = await fetch(new URL('/.netlify/functions/lud-refresco-background.mts', base), { method: 'POST' }).catch(
-    (error) => {
-      console.error('No se pudo pedir el refresco programado', error)
-      return null
-    },
-  )
-  console.log('Refresco programado solicitado', res?.status ?? 'sin respuesta')
+  for (const ruta of RUTAS) {
+    const url = SITIO + ruta
+    try {
+      const res = await fetch(url, { method: 'POST' })
+      console.log('Refresco solicitado', url, res.status)
+      if (res.status !== 404) return
+    } catch (error) {
+      console.error('No se pudo pedir el refresco', url, error)
+    }
+  }
+  console.error('ERROR: no se pudo iniciar el refresco en ninguna ruta')
 }
 
 export const config: Config = {
-  // minuto hora díaMes mes díaSemana → 15:00 UTC los martes (2) y miércoles (3)
+  // 15:00 UTC = 12:00 de Uruguay, martes (2) y miércoles (3)
   schedule: '0 15 * * 2,3',
 }
