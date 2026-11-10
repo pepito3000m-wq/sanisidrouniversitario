@@ -16,7 +16,7 @@ export default async (req: Request, context: Context) => {
 
   if (!guardados && (await reservarRefresco())) {
     context.waitUntil(
-      fetch(new URL('/.netlify/functions/lud-refresco', req.url), { method: 'POST' }).catch((error) =>
+      fetch(new URL('/.netlify/functions/lud-refresco-background.mts', req.url), { method: 'POST' }).catch((error) =>
         console.error('No se pudo pedir el refresco', error),
       ),
     )
